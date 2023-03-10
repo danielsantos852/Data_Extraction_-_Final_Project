@@ -2,7 +2,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 
 # Instance DAG object
@@ -15,6 +15,7 @@ with DAG(
     },
     description='News articles sentiment analysis.',
 	schedule_interval='*/3 * * * * *',
+    start_date=datetime(2023,3,1),
     catchup=False,
 ) as dag:
     
