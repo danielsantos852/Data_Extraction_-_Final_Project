@@ -41,7 +41,7 @@ def get_api_response(url:str) -> dict:
     ''' Takes API's URL as input parameter. 
         Returns API's response as output. '''
     
-    # Request response from API
+    # Get response from API
     r = re.get(url, params={#'lang':'pt',
                             'country':'br',
                             #'max':10,
