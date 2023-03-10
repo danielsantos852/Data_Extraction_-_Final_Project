@@ -20,16 +20,10 @@ def main() -> None:
     # Load raw data to be analyzed
     data = load_parquet(filename=filename_input)
     
-    # [DEBUG] Display dataframe
-    #display(data)
-    
     # Perform sentiment analysis on data
     data = sentiment_analysis(df=data, 
                               url=api_url, 
                               key=api_key)
-    
-    # [DEBUG] Display updated dataframe
-    #display(data)
 
     # Save dataframe to parquet file
     save_as_parquet(df=data, 
@@ -121,9 +115,6 @@ def get_API_response(txt:str, url:str, key:str):
 
     # Convert response content (str to dict)
     r = json.loads(r)
-
-    # [DEBUG] Print response as JSON
-    # print(json.dumps(r, indent=4))
 
     # Return response
     return r
