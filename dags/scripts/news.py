@@ -22,7 +22,7 @@ queries = [
 ]
 
 # API parameters
-api_key = '10940c331d2a782a7a7181a67d0c9b9b'
+api_key = 'INSERT YOUR API KEY HERE'
 time_between_retries = 10
 max_retries = 3
 

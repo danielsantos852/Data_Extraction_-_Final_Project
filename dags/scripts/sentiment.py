@@ -6,7 +6,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 # API parameters
-api_key = '178ed1ae297a85cb88392b3d3174d30b'
+api_key = 'INSERT YOUR API KEY HERE'
 api_url = 'https://api.meaningcloud.com/sentiment-2.1'
 
 # File parameters
