@@ -6,9 +6,24 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 # Input parameters
+queries = [
+    {
+        'query':'aborto',
+        'language':'pt',
+        'country':'br',
+    },
+    {
+        'query':'abortion',
+        'language':'en',
+        'country':'us',
+    },
+]
+
+# API parameters
 api_key = '10940c331d2a782a7a7181a67d0c9b9b'
-query = 'airsoft'
-api_url = f'https://gnews.io/api/v4/search?q={query}&apikey={api_key}'
+
+# Export file parameters
+filename_output = '1.raw'
 
 
 # Main function
@@ -16,36 +31,49 @@ def main() -> None:
     
     ''' Main function. '''
     
-    # Get response from API
-    #response = get_api_response(url=api_url)
-    
-    # [DEBUG] Get mock response
-    response = get_mock_response()
-    
-    # [DEBUG] Export response as JSON file
-    #export_json(d=response, filename='mock')
+    # Create empty dataframe
+    data = pd.DataFrame()
 
-    # Generate dataframe from response
-    data = generate_dataframe(r=response)
+    # For each specified query:
+    for query in queries:
 
-    # [DEBUG] Display dataframe
-    #display(data)
+        # Set API URL
+        api_url = f"https://gnews.io/api/v4/search?q={query['query']}&apikey={api_key}"
+
+        # Get response from API
+        response = get_api_response(url=api_url,
+                                    lang=query['language'],
+                                    country=query['country'])
     
-    # Save dataframe as parquet file
-    save_as_parquet(d=data, filename='raw')
+        # [DEBUG] Get mock response
+        #response = get_mock_response()
+        
+        # [DEBUG] Export response as JSON file
+        #export_json(d=response, filename=f"mock_{query['query']}_{query['language']}_{query['country']}")
+
+        # Generate temp dataframe from response
+        temp = generate_dataframe(r=response)
+
+        # Concatenate data and temp dataframes
+        data = pd.concat(objs=[data, temp],
+                         axis=0,
+                         ignore_index=True)
+    
+    # Save dataframe to parquet file
+    save_as_parquet(df=data, filename=filename_output)
 
 
 # Get API Response function
-def get_api_response(url:str) -> dict:
+def get_api_response(url:str, lang:str, country:str) -> dict:
     
     ''' Takes API's URL as input parameter. 
         Returns API's response as output. '''
     
     # Get response from API
-    r = re.get(url, params={#'lang':'pt',
-                            'country':'br',
+    r = re.get(url, params={'lang':lang,
+                            'country':country,
                             #'max':10,
-                            #'in':'title,description,content',
+                            'in':'title,description',            # 'title, description, content'
                             #'nullable':'content',
                             #'from':'2022-01-01T00:00:00Z',      # e.g. 2022-08-21T16:27:09Z
                             #'to':'2023-03-08T00:00:00Z',
@@ -121,14 +149,14 @@ def generate_dataframe(r:dict) -> pd.core.frame.DataFrame:
 
 
 # Save As Parquet function
-def save_as_parquet(d:pd.core.frame.DataFrame, filename:str) -> None:
+def save_as_parquet(df:pd.core.frame.DataFrame, filename:str) -> None:
     
     ''' Takes dataframe as input. 
-        Saves dataframe as parquet file.
+        Export dataframe as parquet file.
         Returns nothing. '''
     
     # Create pyarrow table from pandas dataframe
-    table = pa.Table.from_pandas(d)
+    table = pa.Table.from_pandas(df)
     
     # Create parquet file
     pqwriter = pq.ParquetWriter(f'./data/{filename}.parquet', table.schema)
