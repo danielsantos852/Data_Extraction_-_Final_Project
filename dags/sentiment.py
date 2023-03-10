@@ -37,7 +37,7 @@ def load_parquet(filename:str) -> pd.core.frame.DataFrame:
         Returns pandas dataframe as output. '''
 
     # Read parquet file as pyarrow table
-    table = pq.read_table(f'./data/{filename}.parquet')
+    table = pq.read_table(f'./dags/data/{filename}.parquet')
 
     # Convert pyarrow table to pandas dataframe
     df = table.to_pandas()
@@ -131,7 +131,7 @@ def save_as_parquet(df:pd.core.frame.DataFrame, filename:str) -> None:
     table = pa.Table.from_pandas(df)
     
     # Create parquet file
-    pqwriter = pq.ParquetWriter(f'./data/{filename}.parquet', table.schema)
+    pqwriter = pq.ParquetWriter(f'./dags/data/{filename}.parquet', table.schema)
     
     # Add table to parquet file
     pqwriter.write_table(table)

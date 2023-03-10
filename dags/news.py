@@ -141,7 +141,7 @@ def get_mock_response() -> dict:
     ''' Returns a mock response (for delevoping purposes). '''
     
     # Load response data from mock JSON file
-    with open('./data/mock.json', 'r', encoding='utf-8') as file:
+    with open('/data/mock.json', 'r', encoding='utf-8') as file:
         r = json.load(file)
     
     # Return response
@@ -156,7 +156,7 @@ def export_json(d:dict, filename:str) -> None:
         Returns nothing. '''
     
     # Export dictionary as JSON file
-    with open(f'./data/{filename}.json', 'w', encoding='utf-8') as file:
+    with open(f'/data/{filename}.json', 'w', encoding='utf-8') as file:
         json.dump(obj=d, fp=file, ensure_ascii=False, indent=4)
 
 
@@ -202,7 +202,7 @@ def save_as_parquet(df:pd.core.frame.DataFrame, filename:str) -> None:
     table = pa.Table.from_pandas(df)
     
     # Create parquet file
-    pqwriter = pq.ParquetWriter(f'./data/{filename}.parquet', table.schema)
+    pqwriter = pq.ParquetWriter(f'./dags/data/{filename}.parquet', table.schema)
     
     # Add table to parquet file
     pqwriter.write_table(table)
